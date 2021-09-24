@@ -4,7 +4,7 @@
 #
 # IAE 101 (Fall 2021)
 # HW 1, Problem 1
-
+ 
 def population(year):
     # ADD YOUR CODE HERE
     return (((year % 100) - 10) * 3) + 310 # CHANGE OR REMOVE THIS LINE
