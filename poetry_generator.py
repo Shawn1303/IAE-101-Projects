@@ -173,7 +173,7 @@ def generate_rhyming_lines():
     lines_list = []
     rhyme = ""
     l2 = False
-    for x in range(2):
+    for x in range(4):
         line = ""
         if(l2):
             list2 = random_word_generator(random.choice(get_rhymes(rhyme)), 5)
@@ -195,6 +195,7 @@ def generate_rhyming_lines():
 # whose number of syllables add up to 10 syllables total.
 def generate_10_syllable_lines():
     lines_list = []
+    prev = None
     for x in range(2):
         list = random_word_generator(None, 20)
         syllables = 0
@@ -203,6 +204,9 @@ def generate_10_syllable_lines():
             if(syllables + count_syllables(word) <= 10):
                 syllables += count_syllables(word)
                 line = line + word + " "
+                prev = word
+            else:
+                random_word_generator(prev, 20)
             if(syllables == 10):
                 break
         lines_list.append(line)
@@ -243,8 +247,28 @@ def generate_metered_line():
 #     -last word choice constrained by rhyming pattern
 # Add any parameters to this function you need to bring in
 # information about how a particular line should be constructed.
-def generate_line():
-    return -1
+def generate_line(syllables, rhyme = None):
+    line = ""
+    prev = None
+    if(rhyme == None):
+        backward = False
+    else:
+        backward = True
+    list = random_word_generator(rhyme, 20)
+    s = 0
+    for word in list:
+        if(s + count_syllables(word) <= syllables):
+            s += count_syllables(word)
+            if(backward):
+                line = word + " " + line
+            else:
+                line = line + word + " "
+            prev = word
+        else:
+            random_word_generator(prev, 20)
+        if(s == syllables):
+            break
+    return line
 
 # generate_poem()
 # Use this function to construct your poem, line by line.
@@ -254,7 +278,20 @@ def generate_line():
 #     -The total number of lines
 #     -How the lines relate to each other (rhyming, syllable counts, etc)
 def generate_poem():
-    return -1
+    A = generate_line(5)
+    B = generate_line(7)
+    C = generate_line(5, random.choice(get_rhymes(A.split()[-1])))
+    poem = A + "\n" + B + "\n" + C + "\n" + "\n"
+    switch = False
+    for x in range(4):
+        if(switch):
+            poem += generate_line(5, random.choice(get_rhymes(A.split()[-1]))) + "\n" + generate_line(5, random.choice(get_rhymes(B.split()[-1]))) + "\n" + C + "\n" + "\n"
+            switch = False
+        else:
+            poem += generate_line(5, random.choice(get_rhymes(A.split()[-1]))) + "\n" + generate_line(5, random.choice(get_rhymes(B.split()[-1]))) + "\n" + A + "\n" + "\n"
+            switch = True
+    poem += generate_line(5, random.choice(get_rhymes(A.split()[-1]))) + "\n" + generate_line(5, random.choice(get_rhymes(B.split()[-1]))) + "\n" + A + "\n" + C
+    return poem
 
 
 if __name__ == "__main__":
