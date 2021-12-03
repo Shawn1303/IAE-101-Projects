@@ -1,9 +1,9 @@
 # mytwitterbot.py
 # IAE 101, Fall 2021
 # Project 04 - Building a Twitterbot
-# Name: 
-# netid:      
-# Student ID: 
+# Name: Shawn Zhu
+# netid: jiachzhu      
+# Student ID: 114590303
 
 import sys
 import time, random
@@ -14,9 +14,9 @@ import simple_twit
 # If you have your own developer credentials, then this is where you add
 # them to the program.
 # Consumer Key also known as API key
-CONSUMER_KEY = ""
+CONSUMER_KEY = "b37NODAQBwDTT7QqLcM6gZMsR"
 # Consumer Secret also known as API Key Secret
-CONSUMER_SECRET = ""
+CONSUMER_SECRET = "luCsdclCIafY3qu1LaWM2OoUpuwZ4tKPIU4AI0Q0UIIDWkriQg"
 
 # Project 04 Exercises
     
@@ -25,25 +25,28 @@ CONSUMER_SECRET = ""
 # the author's screen_name, the tweet creation date, and the
 # tweet full_text
 def exercise1(api):
-    pass # remove this and replace with your solution code
-
+    tweets = simple_twit.get_home_timeline(api, 10)
+    for tweet in tweets:
+        print("ID: " + tweet.id_str + "\n author: " + tweet.author.name + "\n author's screen_name: " + tweet.author.screen_name + "\n creation date: " + str(tweet.created_at) + "\n full text: " + tweet.full_text)
 
 # Exercise 2 - Get and print 10 tweets from another user's timeline
 # For each tweet, print the tweet ID, the author's name,
 # the author's screen_name, the tweet creation date, and the
 # tweet full_text
 def exercise2(api):
-    pass # remove this and replace with your solution code
+    tweets = simple_twit.get_user_timeline(api, "IAE101_ckane", 10)
+    for tweet in tweets:
+        print("ID: " + tweet.id_str + "\n author: " + tweet.author.name + "\n author's screen_name: " + tweet.author.screen_name + "\n creation date: " + str(tweet.created_at) + "\n full text: " + tweet.full_text)
 
 
 # Exercise 3 - Post 1 tweet to your timeline.
 def exercise3(api):
-    pass # remove this and replace with your solution code
+    simple_twit.send_tweet(api, "Tweeting!")
 
 
 # Exercise 4 - Post 1 media tweet to your timeline.
 def exercise4(api):
-    pass # remove this and replace with your solution code
+    simple_twit.send_media_tweet(api, "Art of the day", 'sunflower.png')
 
 # End of Project 04 Exercises
 

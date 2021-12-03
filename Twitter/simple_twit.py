@@ -5,6 +5,7 @@
 import tweepy
 import sys, os, json, webbrowser
 
+
 # CONSTANTS
 VERSION = 0.7
 CONFIG_FILE = "twitter_bot.config"
