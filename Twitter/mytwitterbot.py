@@ -46,7 +46,7 @@ def exercise3(api):
 
 # Exercise 4 - Post 1 media tweet to your timeline.
 def exercise4(api):
-    simple_twit.send_media_tweet(api, "Art of the day", 'sunflower.png')
+    simple_twit.send_media_tweet(api, "Art of the day", (r"C:\Users\Yiwuz\Desktop\IAE-101-Projects\Twitter\sunflower2.jpg"))
 
 # End of Project 04 Exercises
 
