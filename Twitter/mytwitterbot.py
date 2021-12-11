@@ -9,9 +9,10 @@ import sys
 import time, random
 import simple_twit
 import requests
-file = requests.get("https://weather.com/weather/today/l/e554eccbae1298af571347e5d3c449fa9a8a20a7df7a50de2af4ca7f6a2051db")
 from bs4 import BeautifulSoup
-soup = BeautifulSoup(file.text, 'lxml')
+from selenium import webdriver
+import os
+
 
 
 
@@ -59,26 +60,50 @@ def exercise4(api):
 
 # YOUR BOT CODE GOES IN HERE
 def twitterbot(api):
+    file = requests.get("https://weather.com/weather/today/l/e554eccbae1298af571347e5d3c449fa9a8a20a7df7a50de2af4ca7f6a2051db")
+    soup = BeautifulSoup(file.text, 'lxml')
     desc = soup.find('div', class_ = 'CurrentConditions--phraseValue--2Z18W').text
     desc = desc.lower()
     split = desc.split(" ")
+    split = desc.split("/")
     desc = split[len(split)-1]
-    print(desc)
-    file2 = requests.get("https://displate.com/sr-artworks/" + desc)
-    soup2 = BeautifulSoup(file2.text, 'lxml')
-    print(soup2)
-    # list = soup2.find('div', attrs= {'class':'search-results__displates'})
-    list = soup2.findAll('div', class_ = 'search-results__displates')
-    for div in list:
-        print(div)
-    # for items in list:
-    #     art = {}
-    #     art['url'] = items.a['href']
-    #     art['img'] = items.img['src']
-    #     list.append(art)
-    # print(list)
-    # artpiece = random.choice(list)
-    # simple_twit.send_tweet(api, "Art of the day: " + artpiece[0] + "\n" + artpiece[1])
+    # print(desc)
+
+    list2 = []
+    browser = webdriver.Chrome(executable_path=(r'C:\Users\Yiwuz\Desktop\IAE-101-Projects\Twitter\chromedriver.exe'))
+    url = "https://displate.com/sr-artworks/" + desc
+    sada = browser.get(url)
+    time.sleep(3)
+    source = browser.page_source
+    soup = BeautifulSoup(source, 'html.parser')
+
+    link = soup.findAll('a', attrs={'class': 'displate-tile__link displate-item-link'})
+    image = soup.findAll('img', attrs={'class': 'displate-tile__image'})
+    # print(len(image))
+    for x in range(12):
+        list = {}
+        list['link'] = link[x]['href']
+        list['img'] = image[x]['src']
+        list2.append(list)
+    # print(list2)
+
+
+    artpiece = random.choice(list2)
+
+    filename = 'temp.jpg'
+    request = requests.get(artpiece['img'], stream=True)
+    if request.status_code == 200:
+        with open(filename, 'wb') as image:
+            for chunk in request:
+                image.write(chunk)
+
+
+    simple_twit.send_media_tweet(api, "Art of the day (" + desc + ")" + "\nDescription: Shares an art piece according to today's weather!" + "\n" + "https://displate.com" + artpiece['link'], filename)
+    os.remove(filename)
+
+    time.sleep(86400)
+    twitterbot(api)
+
 
 
 
