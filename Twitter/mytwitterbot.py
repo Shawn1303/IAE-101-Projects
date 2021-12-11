@@ -8,6 +8,12 @@
 import sys
 import time, random
 import simple_twit
+import requests
+file = requests.get("https://weather.com/weather/today/l/e554eccbae1298af571347e5d3c449fa9a8a20a7df7a50de2af4ca7f6a2051db")
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(file.text, 'lxml')
+
+
 
 # Assign the string values that represent your developer credentials to
 # each of these variables; credentials provided by the instructor.
@@ -53,7 +59,28 @@ def exercise4(api):
 
 # YOUR BOT CODE GOES IN HERE
 def twitterbot(api):
-    pass # remove this and replace with your solution code
+    desc = soup.find('div', class_ = 'CurrentConditions--phraseValue--2Z18W').text
+    desc = desc.lower()
+    split = desc.split(" ")
+    desc = split[len(split)-1]
+    print(desc)
+    file2 = requests.get("https://displate.com/sr-artworks/" + desc)
+    soup2 = BeautifulSoup(file2.text, 'lxml')
+    print(soup2)
+    # list = soup2.find('div', attrs= {'class':'search-results__displates'})
+    list = soup2.findAll('div', class_ = 'search-results__displates')
+    for div in list:
+        print(div)
+    # for items in list:
+    #     art = {}
+    #     art['url'] = items.a['href']
+    #     art['img'] = items.img['src']
+    #     list.append(art)
+    # print(list)
+    # artpiece = random.choice(list)
+    # simple_twit.send_tweet(api, "Art of the day: " + artpiece[0] + "\n" + artpiece[1])
+
+
 
 
 if __name__ == "__main__":
@@ -67,10 +94,10 @@ if __name__ == "__main__":
 
     # Once you are satisified that your exercises are completed correctly
     # you may comment out these function calls.
-    exercise1(api)
-    exercise2(api)
-    exercise3(api)
-    exercise4(api)
+    # exercise1(api)
+    # exercise2(api)
+    # exercise3(api)
+    # exercise4(api)
 
     # This is the function call that executes the code you defined above
     # for your twitterbot.
